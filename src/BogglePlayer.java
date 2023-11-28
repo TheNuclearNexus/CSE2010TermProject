@@ -17,29 +17,13 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class BogglePlayer {
-    private HashSet<String> words = new HashSet<>();
 
     // initialize BogglePlayer with a file of English words
     public BogglePlayer(String wordFile) throws FileNotFoundException {
-        loadFile(wordFile);
+        WordDatabase.loadFile(wordFile);
     }
 
-    private void loadFile(String file) throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File(file));
-
-        while (scanner.hasNextLine()) {
-            String word = scanner.nextLine();
-
-            if (word.length() < 3 || word.length() > 16)
-                continue;
-
-            word = word.toLowerCase();
-
-            words.add(word);
-        }
-
-        scanner.close();
-    }
+    
 
     // based on the board, find valid words
     //
