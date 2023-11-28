@@ -14,7 +14,7 @@ import java.util.Scanner;
   Pseudocode: Philip Chan
 
   Usage: EvalBogglePlayer wordFile [seed]
-
+  //seed = 13579
   Input:
   wordFile has valid words, one on each line
   seed is for generating different boards [optional]
