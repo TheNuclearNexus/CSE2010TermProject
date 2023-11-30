@@ -1,13 +1,13 @@
 /*
 
   Authors (group members): Evan Gunderson, Timothy Shane, Younghoon Cho, Yavanni Ensley 
-  Email addresses of group members:
+  Email addresses of group members: yensley2022@my.fit.edu ycho2021@my.fit.edu egunderson2022@my.fit.edu tshane2022@my.fit.edu
   Group name: Group #1
 
-  Course: Data Structures and Algorithms
-  Section: 3/4
+  Course: cse2010
+  Assigment: termProjectS34Initial
 
-  Description of the overall algorithm and key data structures:
+  Description of the overall algorithm and key data structures: We are currently using a HashSet to store all the words, and are using a brute-force algorithm to try every possible combination in the boggle board.
 
 
 */
