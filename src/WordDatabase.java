@@ -14,7 +14,7 @@ public class WordDatabase {
     }
 
     /**
-     * Loads a given file path into the database
+     * Loads a given file path into the database.  We are uwing a HashSet at the moment, but will use a trie for the final submission
      * @param file
      * @throws FileNotFoundException
      */

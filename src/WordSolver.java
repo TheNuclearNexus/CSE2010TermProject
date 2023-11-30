@@ -9,11 +9,14 @@ public class WordSolver {
     // check neighbors
     // unmark cell
 
+    // Finds all possible combinations in the boggle board and compares them to the dictionary file
     public static Word[] solve(char[][] board) {
         Word[] myWords = new Word[20];
-
+        
+        // List of valid words that are found in the boggle board
         ArrayList<Word> foundWords = new ArrayList<>();
 
+        // Keeps track of visited cells
         boolean[][] visited = new boolean[4][4];
 
         for (int i = 0; i < 4; i++) {
@@ -24,8 +27,11 @@ public class WordSolver {
             // System.out.println();
         }
 
+        // Sorts the words so that duplicates can easily be removed
         foundWords.sort(Comparator.comparing(Word::getWord));
+        // Removes the duplicates
         foundWords = removeDuplicates(foundWords);
+        // Sorts foundWords in order from longest to shortest
         foundWords.sort((a, b) -> {
             return a.getWord().length() - b.getWord().length();
         });
@@ -66,7 +72,7 @@ public class WordSolver {
             foundWords.add(found);
         }
 
-        
+        // Each unvisited adjacent cell is traversed
         traverseCell(row - 1, col - 1, board, visited, foundWords, currentWord, path);
         traverseCell(row - 1, col, board, visited, foundWords, currentWord, path);
         traverseCell(row - 1, col + 1, board, visited, foundWords, currentWord, path);

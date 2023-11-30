@@ -38,6 +38,7 @@ public class BogglePlayer {
     // See Word.java for details of the Word class and
     // Location.java for details of the Location class
 
+    // returns the results
     public Word[] getWords(char[][] board) {
         return WordSolver.solve(board);
     }
