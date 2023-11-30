@@ -29,4 +29,8 @@ public class Location {
         row = 0;
         col = 0;
     }
+
+    public String toString() {
+        return "(" + row + ", " + col + ")";
+    }
 }

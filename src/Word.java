@@ -191,4 +191,8 @@ public class Word {
             return null;
         }
     }
+
+    public String toString() {
+        return "[" + word + ", " + path.toString() + "]";
+    }
 }

@@ -1,0 +1,8 @@
+Preprocessing in BogglePlayer...
+Pre-processing in seconds (not part of score): 1.5078E-1
+memory in bytes (not part of score): 3.0355E8
+Playing Boggle...
+WRLN
+EIRG
+OATU
+IAAR
