@@ -36,7 +36,8 @@ public class WordSolver {
 
         return myWords;
     }
-
+    
+    // Recursively traverses each cell, finding every path possible and comparing words to the hashset
     private static void traverseCell(
             int row,
             int col,
@@ -79,6 +80,7 @@ public class WordSolver {
         visited[row][col] = false;
     }
 
+    // print method to trace the path
     private static void print(boolean[][] visited) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -89,6 +91,7 @@ public class WordSolver {
         System.out.println();
     }
 
+    // Removes the duplicates from the foundWords arrayList
     public static ArrayList<Word> removeDuplicates(ArrayList<Word> a) {
         ArrayList<Word> noDuplicates = new ArrayList<>();
         if (!a.isEmpty()) { // nothing needs to happen if the array is empty
