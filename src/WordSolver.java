@@ -16,6 +16,9 @@ public class WordSolver {
         // List of valid words that are found in the boggle board
         ArrayList<Word> foundWords = new ArrayList<>();
 
+        // Array of valid words found in the boggle board
+        Word[] solvedWords = new Word[20];
+
         // Keeps track of visited cells
         boolean[][] visited = new boolean[4][4];
 

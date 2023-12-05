@@ -14,12 +14,13 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 public class BogglePlayer {
 
     // initialize BogglePlayer with a file of English words
-    public BogglePlayer(String wordFile) throws FileNotFoundException {
+    public BogglePlayer(String wordFile) throws IOException {
         WordDatabase.loadFile(wordFile);
     }
 
