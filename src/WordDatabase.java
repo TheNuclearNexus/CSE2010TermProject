@@ -4,18 +4,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
-//import java.util.Scanner;
 
 public class WordDatabase {
     private static final TrieNode root = new TrieNode();
-    private static final HashSet<String> words = new HashSet<>();
 
     public static void main(String[] args) throws IOException {
         loadFile("input/words.txt");
 
-        System.out.println(contains("oat"));
-        System.out.println(contains("abc"));
-        System.out.println(contains("aardvark"));
+        assert contains("oat") == true;
+        System.out.println(contains("wreat"));
     }
 
     /**
@@ -43,6 +40,7 @@ public class WordDatabase {
                     root.children[curChar] = new TrieNode();
                 root = root.children[curChar];
             }
+            root.word = line.toLowerCase();
         }
 
         reader.close();
@@ -68,16 +66,32 @@ public class WordDatabase {
                 return false;
             root = root.children[curChar];
         }
+        return root.word != null;
+    }
 
-        return true;
+    public static TrieNode getRoot() {
+        return root;
     }
     
     static class TrieNode {
         // private char data;
+        private String word;
         private TrieNode[] children;
 
         public TrieNode() {
             children = new TrieNode[26];
+        }
+
+        public String getWord() {
+            return word;
+        }
+
+        public TrieNode[] getChildren() {
+            return children;
+        }
+
+        public TrieNode getChild(char c) {
+            return children[(int)Character.toLowerCase(c) - 97];
         }
     }
 }

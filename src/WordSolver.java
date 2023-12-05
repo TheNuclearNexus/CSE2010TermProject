@@ -16,19 +16,31 @@ public class WordSolver {
         // List of valid words that are found in the boggle board
         ArrayList<Word> foundWords = new ArrayList<>();
 
-        // Array of valid words found in the boggle board
-        Word[] solvedWords = new Word[20];
+        // Priority queue of valid words found in the boggle board
+        // PriorityQueue<Word> solvedWords = new PriorityQueue<>((s1, s2) -> Integer.compare(s1.length(), s2.length()));
 
         // Keeps track of visited cells
         boolean[][] visited = new boolean[4][4];
 
+        // for (int i = 0; i < 4; i++) {
+        //     for (int j = 0; j < 4; j++) {
+        //         System.out.print(board[i][j]);
+        //     }
+        //     System.out.println();
+        // }
+
+        /*
+         *  WRLN
+            EIRG
+            OATU
+            IAAR
+         */
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                // System.out.print(board[i][j]);
-                traverseCell(i, j, board, visited, foundWords, "", new ArrayList<Location>());
+                traverseCell(i, j, board, visited, foundWords, WordDatabase.getRoot(), new ArrayList<Location>());
             }
-            // System.out.println();
         }
+        // System.out.println(foundWords);
 
         // Sorts the words so that duplicates can easily be removed
         foundWords.sort(Comparator.comparing(Word::getWord));
@@ -39,9 +51,13 @@ public class WordSolver {
             return a.getWord().length() - b.getWord().length();
         });
 
+
         myWords = foundWords
             .subList(foundWords.size() - 20, foundWords.size())
             .toArray(myWords);
+
+        // for (Word w : foundWords) 
+        //     System.out.println(w);
 
         return myWords;
     }
@@ -53,37 +69,41 @@ public class WordSolver {
             char[][] board,
             boolean[][] visited,
             ArrayList<Word> foundWords,
-            String currentWord,
+            WordDatabase.TrieNode node,
             ArrayList<Location> path) {
         if (row < 0 || row >= 4 || col < 0 || col >= 4)
             return;
+
         if (visited[row][col])
             return;
 
+        WordDatabase.TrieNode child = node.getChild(board[row][col]);
+        if (child == null)
+            return;
+
         Location curLocation = new Location(row, col);
-        char currentChar = board[row][col];
-        currentWord = currentWord + currentChar;
 
         
         visited[row][col] = true;
         path.add(curLocation);
 
-        // System.out.println("Current Word: " + currentWord);
-        if (WordDatabase.contains(currentWord)) {
-            Word found = new Word(currentWord);
+        if (child.getWord() != null) {
+            Word found = new Word(child.getWord().toUpperCase());
+            if(!WordDatabase.contains(child.getWord()))
+                System.out.println(child.getWord() + " not in database!");
             found.setPath((ArrayList<Location>)path.clone());
             foundWords.add(found);
         }
 
         // Each unvisited adjacent cell is traversed
-        traverseCell(row - 1, col - 1, board, visited, foundWords, currentWord, path);
-        traverseCell(row - 1, col, board, visited, foundWords, currentWord, path);
-        traverseCell(row - 1, col + 1, board, visited, foundWords, currentWord, path);
-        traverseCell(row, col - 1, board, visited, foundWords, currentWord, path);
-        traverseCell(row, col + 1, board, visited, foundWords, currentWord, path);
-        traverseCell(row + 1, col - 1, board, visited, foundWords, currentWord, path);
-        traverseCell(row + 1, col, board, visited, foundWords, currentWord, path);
-        traverseCell(row + 1, col + 1, board, visited, foundWords, currentWord, path);
+        traverseCell(row - 1, col - 1, board, visited, foundWords, child, path);
+        traverseCell(row - 1, col, board, visited, foundWords, child, path);
+        traverseCell(row - 1, col + 1, board, visited, foundWords, child, path);
+        traverseCell(row, col - 1, board, visited, foundWords, child, path);
+        traverseCell(row, col + 1, board, visited, foundWords, child, path);
+        traverseCell(row + 1, col - 1, board, visited, foundWords, child, path);
+        traverseCell(row + 1, col, board, visited, foundWords, child, path);
+        traverseCell(row + 1, col + 1, board, visited, foundWords, child, path);
         
         path.remove(curLocation);
         visited[row][col] = false;
