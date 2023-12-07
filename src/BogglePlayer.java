@@ -5,9 +5,11 @@
   Group name: Group #1
 
   Course: cse2010
-  Assigment: termProjectS34Initial
+  Assigment: termProjectS34Final
 
-  Description of the overall algorithm and key data structures: We are currently using a HashSet to store all the words, and are using a brute-force algorithm to try every possible combination in the boggle board.
+  Description of the overall algorithm and key data structures: All words in the dictionary are put into a trie, after filtering out all words that are less than 3 letters and more than 16 letters.  The trie is then 
+  compressed to save memory space.  The program then finds paths, starting at each letter on the board.  If a path will generate a word that is in the trie, the program will skip that path, ensuring that no time is
+  wasted generating paths that do not make a word.  To save space, the program only keeps track of the 20 longest words, which are then returned in an array.
 
 
 */

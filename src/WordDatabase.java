@@ -1,11 +1,7 @@
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,14 +10,7 @@ public class WordDatabase {
 
     public static void main(String[] args) throws IOException {
         loadFile("input/words.txt");
-        System.out.println("Done loading");
-        compress();
-        // System.out.println(root);
-
-        System.out.println(contains("add"));
-        System.out.println(contains("wreat"));
-        System.out.println(contains("abc"));   
-        System.out.println(contains("abiogenesis"));             
+        compress();          
     }
 
     /**
@@ -34,13 +23,13 @@ public class WordDatabase {
 
         String line;
         while ((line = reader.readLine()) != null) {
+            // Each word is split into a char array so that smaller fragments can be put into the trie
             char[] word = line.toLowerCase().toCharArray();
 
             if (word.length < 3 || word.length > 16)
                 continue;
+
             
-            // words.add(word.replace("qu", "q"));
-            // System.out.println("Add word: " + line);
             TrieNode curNode = WordDatabase.root;
             for (int i = 0; i < word.length; i++) {
                 char curChar = word[i];
@@ -66,11 +55,19 @@ public class WordDatabase {
         reader.close();
     }
 
+    /**
+     * Calls the compress method for the trie
+     */
     public static void compress() {
         for (TrieNode c : root.children) 
             compress(c, null);
     }
 
+    /**
+     * Compresses the trie to save memory space
+     * @param node
+     * @param parent
+     */
     static void compress(TrieNode node, TrieNode parent) {
         for (TrieNode n : node.children)
             compress(n, node);
@@ -129,16 +126,17 @@ public class WordDatabase {
             }
             
         }
-        System.out.println(curNode.word);
         if (curNode.getFragment().length > 1 && offset != curNode.getFragment().length - 1)
             return false;
         return curNode.word != null;
     }
 
+    // Returns the root
     public static TrieNode getRoot() {
         return root;
     }
     
+    // TrieNode class
     static class TrieNode {
         private char[] fragment;
         private String word;
@@ -160,6 +158,11 @@ public class WordDatabase {
             return children;
         }
 
+        /**
+         * returns the child
+         * @param fragment
+         * @return
+         */
         public TrieNode getChild(char fragment) {
             for (TrieNode node : children) {
                 if (node.fragment[0] == Character.toLowerCase(fragment));
@@ -167,6 +170,12 @@ public class WordDatabase {
             }
             return null;
         }
+
+        /**
+         * returns the child
+         * @param fragment
+         * @return
+         */
         public TrieNode getChild(String fragment) {
             for (TrieNode node : children) {
                 if (node.fragment.equals(fragment.toLowerCase().toCharArray())) {
@@ -181,6 +190,11 @@ public class WordDatabase {
             return toString(0);
         }
 
+        /**
+         * Returns a string at the given depth
+         * @param depth
+         * @return
+         */
         public String toString(int depth) {
             String spaces = " ".repeat(depth * 2);
             String out = "";
