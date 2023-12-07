@@ -1,6 +1,8 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Stack;
+import java.util.concurrent.Flow.Subscriber;
 
 public class WordSolver {
 
@@ -22,12 +24,12 @@ public class WordSolver {
         // Keeps track of visited cells
         boolean[][] visited = new boolean[4][4];
 
-        // for (int i = 0; i < 4; i++) {
-        //     for (int j = 0; j < 4; j++) {
-        //         System.out.print(board[i][j]);
-        //     }
-        //     System.out.println();
-        // }
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                System.out.print(board[i][j]);
+            }
+            System.out.println();
+        }
 
         /*
          *  WRLN
@@ -37,7 +39,7 @@ public class WordSolver {
          */
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                traverseCell(i, j, board, visited, foundWords, WordDatabase.getRoot(), new ArrayList<Location>());
+                traverseCell(i, j, board, visited, foundWords, WordDatabase.getRoot(), 0, new ArrayList<Location>());
             }
         }
         // System.out.println(foundWords);
@@ -53,11 +55,8 @@ public class WordSolver {
 
 
         myWords = foundWords
-            .subList(foundWords.size() - 20, foundWords.size())
+            .subList(Math.max(foundWords.size() - 20, 0), foundWords.size())
             .toArray(myWords);
-
-        // for (Word w : foundWords) 
-        //     System.out.println(w);
 
         return myWords;
     }
@@ -70,6 +69,7 @@ public class WordSolver {
             boolean[][] visited,
             ArrayList<Word> foundWords,
             WordDatabase.TrieNode node,
+            int offset,
             ArrayList<Location> path) {
         if (row < 0 || row >= 4 || col < 0 || col >= 4)
             return;
@@ -77,9 +77,26 @@ public class WordSolver {
         if (visited[row][col])
             return;
 
-        WordDatabase.TrieNode child = node.getChild(board[row][col]);
-        if (child == null)
+        WordDatabase.TrieNode nextNode = null;
+        if (node.getFragment() == null || (node.getFragment().length == 1 && node.getFragment()[0] == Character.toLowerCase(board[row][col])) || offset == node.getFragment().length - 1) {
+            offset = 0;
+            for (WordDatabase.TrieNode child : node.getChildren()) {
+                if (child.getFragment()[0] == Character.toLowerCase(board[row][col])) {
+                    nextNode = child;
+                    break;
+                }
+            }
+        } else {
+            offset++;
+            if (node.getFragment()[offset] != Character.toLowerCase(board[row][col])) {
+                return;
+            }
+            nextNode = node;
+        }
+        
+        if (nextNode == null) {
             return;
+        }
 
         Location curLocation = new Location(row, col);
 
@@ -87,23 +104,25 @@ public class WordSolver {
         visited[row][col] = true;
         path.add(curLocation);
 
-        if (child.getWord() != null) {
-            Word found = new Word(child.getWord().toUpperCase());
-            if(!WordDatabase.contains(child.getWord()))
-                System.out.println(child.getWord() + " not in database!");
+        if (nextNode.getWord() != null && offset == nextNode.getFragment().length - 1) {
+            // System.out.println(nextNode.getWord());
+            Word found = new Word(nextNode.getWord().toUpperCase());
+
             found.setPath((ArrayList<Location>)path.clone());
             foundWords.add(found);
         }
 
+        
+
         // Each unvisited adjacent cell is traversed
-        traverseCell(row - 1, col - 1, board, visited, foundWords, child, path);
-        traverseCell(row - 1, col, board, visited, foundWords, child, path);
-        traverseCell(row - 1, col + 1, board, visited, foundWords, child, path);
-        traverseCell(row, col - 1, board, visited, foundWords, child, path);
-        traverseCell(row, col + 1, board, visited, foundWords, child, path);
-        traverseCell(row + 1, col - 1, board, visited, foundWords, child, path);
-        traverseCell(row + 1, col, board, visited, foundWords, child, path);
-        traverseCell(row + 1, col + 1, board, visited, foundWords, child, path);
+        traverseCell(row - 1, col - 1, board, visited, foundWords, nextNode, offset, path);
+        traverseCell(row - 1, col, board, visited, foundWords, nextNode, offset, path);
+        traverseCell(row - 1, col + 1, board, visited, foundWords, nextNode, offset, path);
+        traverseCell(row, col - 1, board, visited, foundWords, nextNode, offset, path);
+        traverseCell(row, col + 1, board, visited, foundWords, nextNode, offset, path);
+        traverseCell(row + 1, col - 1, board, visited, foundWords, nextNode, offset, path);
+        traverseCell(row + 1, col, board, visited, foundWords, nextNode, offset, path);
+        traverseCell(row + 1, col + 1, board, visited, foundWords, nextNode, offset, path);
         
         path.remove(curLocation);
         visited[row][col] = false;

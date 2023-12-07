@@ -22,6 +22,7 @@ public class BogglePlayer {
     // initialize BogglePlayer with a file of English words
     public BogglePlayer(String wordFile) throws IOException {
         WordDatabase.loadFile(wordFile);
+        WordDatabase.compress();
     }
 
     
